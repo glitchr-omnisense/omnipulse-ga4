@@ -44,7 +44,7 @@ final class Ga4Factory extends ProviderFactory
         $credentials = $c->string('credentials');
 
         return new Ga4Provider(
-            new JsonApi($http, 'Google Analytics'),
+            new JsonApi($http, 'Google Analytics', $c->backoff()),
             new GoogleToken(new JsonApi($http, 'Google OAuth'), self::SCOPE, null !== $credentials ? GoogleToken::credentials($credentials) : null, $c->string('access_token')),
             (string) $c->string('property'),
             rtrim($c->string('url') ?? 'https://analyticsdata.googleapis.com/v1beta', '/'),

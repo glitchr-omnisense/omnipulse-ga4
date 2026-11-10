@@ -188,3 +188,12 @@ endpoint.
 An independent, unofficial client, affiliated with Google in no way. Whoever runs it complies with
 Google's terms (<https://developers.google.com/terms>) and the Data API's quotas
 (<https://developers.google.com/analytics/devguides/reporting/data/v1/quotas>): see the README.
+
+## Usage policy
+
+Google Analytics 4's usage policy is declared as data in [`policy.json`](policy.json) (omnisense/contracts'
+schema, named in `composer.json`'s `extra.omnisense.policy`), its terms read on
+2026-11-10 (https://developers.google.com/analytics/devguides/reporting/data/v1/quotas): 200,000 core tokens a day and 40,000 an hour per property, 14,000 an hour per project per property (written as `units`, counted one per report: a lower bound), 120 potentially thresholded requests an hour (written over every report, the stricter form), 10 concurrent requests; rights unknown; OAuth credentials. omnipulse's registry enforces it - a call over a
+limit is never made, a 429 and its `Retry-After` hold every next call
+(`UsageLimitReachedException`) - and a site may tighten it, never loosen it
+(omnisense/omnipulse's docs/policies.md).

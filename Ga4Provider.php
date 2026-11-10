@@ -10,14 +10,21 @@ use Omnipulse\Model\Metric;
 use Omnipulse\Model\ReachQuery;
 use Omnipulse\Model\Report;
 use Omnipulse\Model\Row;
+use Omnisense\Contracts\Policy\DeclaresUsagePolicyInterface;
+use Omnisense\Contracts\Policy\UsagePolicy;
 
 /**
  * The Google Analytics Data API (https://developers.google.com/analytics/devguides/reporting/data/v1):
  * POST properties/{id}:runReport - date range, dimensions, metrics, EXACT
  * string filters, pages of rows (limit, offset) - with a bearer token.
  */
-final class Ga4Provider implements AudienceInterface
+final class Ga4Provider implements AudienceInterface, DeclaresUsagePolicyInterface
 {
+    /** Google Analytics 4's usage policy, as its terms read on the day it says (provenance.verifiedAt). */
+    public const POLICY = __DIR__.'/policy.json';
+
+    private static ?UsagePolicy $policy = null;
+
     private const DIMENSIONS = ['page' => 'pagePath', 'entry_page' => 'landingPage', 'source' => 'sessionSource', 'country' => 'countryId', 'device' => 'deviceCategory', 'date' => 'date'];
 
     private const METRICS = ['visitors' => 'totalUsers', 'visits' => 'sessions', 'pageviews' => 'screenPageViews', 'bounce_rate' => 'bounceRate', 'visit_duration' => 'averageSessionDuration'];
@@ -43,6 +50,11 @@ final class Ga4Provider implements AudienceInterface
         return 'Google Analytics 4';
     }
 
+    public function usagePolicy(): UsagePolicy
+    {
+        return self::$policy ??= UsagePolicy::fromFile(self::POLICY);
+    }
+
     public function capabilities(): Capabilities
     {
         return new Capabilities(
@@ -51,6 +63,7 @@ final class Ga4Provider implements AudienceInterface
             metrics: [Metric::Visitors, Metric::Visits, Metric::Pageviews, Metric::BounceRate, Metric::VisitDuration],
             terms: ['https://developers.google.com/analytics/devguides/reporting/data/v1/quotas', 'https://developers.google.com/terms'],
             limits: ['token quotas per property (per day, per hour, concurrent requests) - a report costs more the more rows and dimensions it has', 'rows can be thresholded (Google signals) or grouped under "(other)" on high-cardinality reports'],
+            policy: $this->usagePolicy(),
         );
     }
 

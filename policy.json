@@ -1,0 +1,70 @@
+{
+    "$schema": "https://github.com/glitchr-omnisense/contracts/blob/1.x/resources/usage-policy.schema.json",
+    "provider": "ga4",
+    "rateLimits": [
+        {
+            "max": 200000,
+            "window": "day",
+            "scope": "key",
+            "operations": [],
+            "unit": "units",
+            "note": "Core tokens per property per day, standard property (2,000,000 for Analytics 360). A report costs one token or more, by its rows, dimensions and date range; the guard counts one per call, a lower bound: Google's 429 (its Retry-After) stops the rest."
+        },
+        {
+            "max": 40000,
+            "window": "hour",
+            "scope": "key",
+            "operations": [],
+            "unit": "units",
+            "note": "Core tokens per property per hour, standard property (400,000 for Analytics 360)."
+        },
+        {
+            "max": 14000,
+            "window": "hour",
+            "scope": "application",
+            "operations": [],
+            "unit": "units",
+            "note": "Core tokens per project per property per hour, standard property (140,000 for Analytics 360)."
+        },
+        {
+            "max": 120,
+            "window": "hour",
+            "scope": "key",
+            "operations": [],
+            "note": "Potentially thresholded requests per property per hour (a request with demographic dimensions, or when Google signals is on): written over every request, the stricter form; most reports are not thresholded."
+        }
+    ],
+    "concurrency": 10,
+    "rights": {
+        "commercial": "unknown",
+        "openSourceRequired": null,
+        "caching": {
+            "permission": "unknown",
+            "maxTtl": null
+        },
+        "storage": "unknown",
+        "redistribution": "unknown",
+        "attribution": {
+            "required": false,
+            "text": null,
+            "url": null,
+            "where": []
+        },
+        "licence": null
+    },
+    "requirements": {
+        "key": true,
+        "userAgent": {
+            "required": false,
+            "pattern": null
+        }
+    },
+    "provenance": {
+        "terms": "https://developers.google.com/terms",
+        "policy": "https://developers.google.com/analytics/devguides/reporting/data/v1/quotas",
+        "verifiedAt": "2026-11-10",
+        "declaredBy": "maintainer",
+        "contact": null,
+        "notes": "Quotas read on 2026-11-10 (Core quotas, standard property): 200,000 tokens a day and 40,000 an hour per property, 14,000 an hour per project per property, 10 concurrent requests per property (concurrency), 10 server errors per project per property per hour, 120 potentially thresholded requests per property per hour. Tokens are written as \"units\" (the cost of a request is Google's to compute). Scope \"key\" stands for the property, \"application\" for the Cloud project. The Google APIs Terms of Service apply; they set no figure on caching or storage of reports, which are the property owner's own data: unknown. OAuth credentials (a service account or a token) with analytics.readonly."
+    }
+}
