@@ -1,19 +1,19 @@
 <?php
 
-namespace Omnireach\Ga4\Tests;
+namespace Omnipulse\Ga4\Tests;
 
-use Omnireach\Exception\InvalidKeyException;
-use Omnireach\Exception\NotSupportedException;
-use Omnireach\Ga4\Ga4Factory;
-use Omnireach\Ga4\Ga4Provider;
-use Omnireach\Ga4\GoogleToken;
-use Omnireach\Http\JsonApi;
-use Omnireach\Model\Dimension;
-use Omnireach\Model\Metric;
-use Omnireach\Model\ReachQuery;
-use Omnireach\Model\Row;
-use Omnireach\Registry;
-use Omnireach\Testing\RecordedHttpClient;
+use Omnipulse\Exception\InvalidKeyException;
+use Omnipulse\Exception\NotSupportedException;
+use Omnipulse\Ga4\Ga4Factory;
+use Omnipulse\Ga4\Ga4Provider;
+use Omnipulse\Ga4\GoogleToken;
+use Omnipulse\Http\JsonApi;
+use Omnipulse\Model\Dimension;
+use Omnipulse\Model\Metric;
+use Omnipulse\Model\ReachQuery;
+use Omnipulse\Model\Row;
+use Omnipulse\Registry;
+use Omnipulse\Testing\RecordedHttpClient;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -71,7 +71,7 @@ final class Ga4ProviderTest extends TestCase
         $pair = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => \OPENSSL_KEYTYPE_RSA]);
         self::assertNotFalse($pair);
         openssl_pkey_export($pair, $private);
-        $key = ['type' => 'service_account', 'client_email' => 'omnireach-test@example-project.iam.gserviceaccount.com', 'private_key' => \is_string($private) ? $private : ''];
+        $key = ['type' => 'service_account', 'client_email' => 'omnipulse-test@example-project.iam.gserviceaccount.com', 'private_key' => \is_string($private) ? $private : ''];
         $http = self::http();
         $registry = new Registry([new Ga4Factory($http)], ['ga' => ['factory' => 'ga4', 'options' => ['property' => '123456789', 'credentials' => (string) json_encode($key)]]]);
 

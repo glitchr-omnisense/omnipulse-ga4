@@ -1,7 +1,7 @@
 {
-    "name": "omnireach/ga4",
+    "name": "omnipulse/ga4",
     "type": "library",
-    "description": "Omnireach's Google Analytics 4, under any PHP host: visitors, sessions, pageviews, bounce rate and session length of a property, by landing page, page, source, country, device or day, through the Google Analytics Data API (runReport; a service account's key or an access token).",
+    "description": "Omnipulse's Google Analytics 4, under any PHP host: visitors, sessions, pageviews, bounce rate and session length of a property, by landing page, page, source, country, device or day, through the Google Analytics Data API (runReport; a service account's key or an access token).",
     "keywords": [
         "google",
         "google-analytics",
@@ -10,9 +10,9 @@
         "audience",
         "data-api",
         "framework-agnostic",
-        "omnireach"
+        "omnipulse"
     ],
-    "homepage": "https://github.com/glitchr-omnisense/omnireach-ga4",
+    "homepage": "https://github.com/glitchr-omnisense/omnipulse-ga4",
     "license": "MIT",
     "authors": [
         {
@@ -23,16 +23,19 @@
     "require": {
         "php": ">=8.2",
         "ext-openssl": "*",
-        "omnisense/omnireach": "^1.0@dev",
+        "omnisense/omnipulse": "^1.0@dev",
         "symfony/http-client-contracts": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0",
         "symfony/http-client": "^6.4|^7.0|^8.0"
     },
+    "replace": {
+        "omnireach/ga4": "self.version"
+    },
     "autoload": {
         "psr-4": {
-            "Omnireach\\Ga4\\": ""
+            "Omnipulse\\Ga4\\": ""
         },
         "exclude-from-classmap": [
             "/Tests/"
@@ -40,7 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Omnireach\\Ga4\\Tests\\": "Tests/"
+            "Omnipulse\\Ga4\\Tests\\": "Tests/"
         }
     },
     "extra": {

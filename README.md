@@ -1,12 +1,15 @@
-# omnireach/ga4
+# omnipulse/ga4
 
-[omnisense/omnireach](https://github.com/glitchr-omnisense/omnireach)'s Google Analytics 4, under
+Formerly `omnireach/ga4` (renamed on 2026-11-10 with its family: `Omnireach\` is now `Omnipulse\`;
+this package replaces the former name).
+
+[omnisense/omnipulse](https://github.com/glitchr-omnisense/omnipulse)'s Google Analytics 4, under
 any PHP host: visitors, sessions, pageviews, bounce rate and session length of a property, by
 landing page, page, source, country, device or day, combined as needed.
 
 ```php
-use Omnireach\Ga4\Ga4Factory;
-use Omnireach\Registry;
+use Omnipulse\Ga4\Ga4Factory;
+use Omnipulse\Registry;
 use Symfony\Component\HttpClient\HttpClient;
 
 $registry = new Registry([new Ga4Factory(HttpClient::create())], [
@@ -35,7 +38,7 @@ token quotas per property (per day, per hour, concurrent requests); rows may be 
 **Google credentials**: a service account's JSON key (`credentials`: the JSON or the path of
 its file) - the token is asked with a JWT signed by its key (RS256, the OAuth 2.0 JWT bearer
 grant) and kept until a minute before it expires - or an `access_token` obtained elsewhere.
-`GoogleToken` is the same class in omnireach/search-console and omnireach/ga4.
+`GoogleToken` is the same class in omnipulse/search-console and omnipulse/ga4.
 
 **Reuse**: Google's PHP libraries were set aside: `google/apiclient` with
 `google/apiclient-services` (every Google API generated, a very large package, its own Guzzle

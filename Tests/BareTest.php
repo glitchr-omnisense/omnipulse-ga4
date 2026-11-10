@@ -1,26 +1,26 @@
 <?php
 
-namespace Omnireach\Ga4\Tests;
+namespace Omnipulse\Ga4\Tests;
 
-use Omnireach\Ga4\Ga4Provider;
-use Omnireach\Testing\LoadCheck;
+use Omnipulse\Ga4\Ga4Provider;
+use Omnipulse\Testing\LoadCheck;
 use PHPUnit\Framework\TestCase;
 
 /**
- * omnireach/ga4 with no framework: every class of the package loaded in a
+ * omnipulse/ga4 with no framework: every class of the package loaded in a
  * PHP process of its own, with nothing from outside but what it requires -
- * omnisense/omnireach and Symfony's HTTP client contracts (interfaces
+ * omnisense/omnipulse and Symfony's HTTP client contracts (interfaces
  * only): no framework, no HTTP client, no application, even in the
  * harness where they are installed beside it.
  */
 final class BareTest extends TestCase
 {
-    private const ALLOWED = ['/vendor/omnisense/omnireach/', '/omnireach/core/', '/vendor/symfony/http-client-contracts/', '/vendor/symfony/service-contracts/'];
+    private const ALLOWED = ['/vendor/omnisense/omnipulse/', '/omnipulse/core/', '/vendor/symfony/http-client-contracts/', '/vendor/symfony/service-contracts/'];
 
     public function testEveryClassLoadsWithTheRequiredPackagesAlone(): void
     {
-        $autoload = LoadCheck::autoload(Ga4Provider::class, self::class, \dirname(__DIR__)) ?? self::markTestSkipped('omnireach/ga4 is installed in an application here, or no autoloader knows its tests.');
-        $report = LoadCheck::run(\dirname(__DIR__), 'Omnireach\\Ga4\\', $autoload);
+        $autoload = LoadCheck::autoload(Ga4Provider::class, self::class, \dirname(__DIR__)) ?? self::markTestSkipped('omnipulse/ga4 is installed in an application here, or no autoloader knows its tests.');
+        $report = LoadCheck::run(\dirname(__DIR__), 'Omnipulse\\Ga4\\', $autoload);
 
         self::assertContains(Ga4Provider::class, $report['loaded']);
         self::assertSame([], $report['foreign'], 'no class of a framework, an HTTP client or an application');

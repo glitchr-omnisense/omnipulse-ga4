@@ -1,12 +1,12 @@
 <?php
 
-namespace Omnireach\Ga4;
+namespace Omnipulse\Ga4;
 
-use Omnireach\Config;
-use Omnireach\Exception\InvalidConfigException;
-use Omnireach\Http\JsonApi;
-use Omnireach\ProviderFactory;
-use Omnireach\ProviderInterface;
+use Omnipulse\Config;
+use Omnipulse\Exception\InvalidConfigException;
+use Omnipulse\Http\JsonApi;
+use Omnipulse\ProviderFactory;
+use Omnipulse\ProviderInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -29,9 +29,9 @@ final class Ga4Factory extends ProviderFactory
     protected function populate(Config $c): void
     {
         $c->defaults([
-            'omnireach.factory_name' => 'ga4',
-            'omnireach.factory_title' => 'Google Analytics 4',
-            'omnireach.required_options' => ['property'],
+            'omnipulse.factory_name' => 'ga4',
+            'omnipulse.factory_title' => 'Google Analytics 4',
+            'omnipulse.required_options' => ['property'],
             'credentials' => '',
             'access_token' => '',
             'url' => 'https://analyticsdata.googleapis.com/v1beta',

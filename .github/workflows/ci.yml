@@ -16,4 +16,4 @@ jobs:
   package:
     uses: glitchr-studio/ci/.github/workflows/php-package.yml@main
     with:
-      smoke-class: 'Omnireach\Ga4\Ga4Provider'
+      smoke-class: 'Omnipulse\Ga4\Ga4Provider'

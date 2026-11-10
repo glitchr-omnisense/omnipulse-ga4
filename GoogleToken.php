@@ -1,10 +1,10 @@
 <?php
 
-namespace Omnireach\Ga4;
+namespace Omnipulse\Ga4;
 
-use Omnireach\Exception\InvalidConfigException;
-use Omnireach\Exception\ProviderException;
-use Omnireach\Http\JsonApi;
+use Omnipulse\Exception\InvalidConfigException;
+use Omnipulse\Exception\ProviderException;
+use Omnipulse\Http\JsonApi;
 
 /**
  * A bearer token for a Google API: the one given, or one obtained for a
@@ -12,7 +12,7 @@ use Omnireach\Http\JsonApi;
  * its token_uri (the OAuth 2.0 JWT bearer grant, RFC 7523) - and kept until
  * a minute before it expires.
  *
- * The same class lives in omnireach/search-console and omnireach/ga4: two
+ * The same class lives in omnipulse/search-console and omnipulse/ga4: two
  * providers, one grant, no shared package for forty lines.
  */
 final class GoogleToken

@@ -1,6 +1,6 @@
-# omnireach/ga4
+# omnipulse/ga4
 
-Google Analytics 4 for [omnisense/omnireach](https://github.com/glitchr-omnisense/omnireach):
+Google Analytics 4 for [omnisense/omnipulse](https://github.com/glitchr-omnisense/omnipulse):
 visitors, sessions, pageviews, bounce rate and session length of a property, by landing page,
 page, source, country, device or day, combined as needed. The provider calls:
 
@@ -13,16 +13,16 @@ page, source, country, device or day, combined as needed. The provider calls:
 Google's PHP libraries are not used (`google/analytics-data` runs on gRPC and protobuf,
 `google/apiclient` and `google/auth` on Guzzle): one JSON call per page of rows and one signed
 JWT, through the application's HTTP client. `GoogleToken` is the same class as in
-[omnireach/search-console](https://github.com/glitchr-omnisense/omnireach-search-console), under
+[omnipulse/search-console](https://github.com/glitchr-omnisense/omnipulse-search-console), under
 this package's namespace.
 
 ## Installation
 
 ```sh
-composer require omnireach/ga4 symfony/http-client
+composer require omnipulse/ga4 symfony/http-client
 ```
 
-Requires PHP 8.2, `ext-openssl` (to sign the JWT), `omnisense/omnireach` (1.x) and
+Requires PHP 8.2, `ext-openssl` (to sign the JWT), `omnisense/omnipulse` (1.x) and
 `symfony/http-client-contracts` (3).
 
 ## Credentials
@@ -61,7 +61,7 @@ Per query: `ReachQuery::$site` replaces `property` for one report.
 
 The family's names map to GA4's:
 
-| Omnireach | GA4 |
+| Omnipulse | GA4 |
 |---|---|
 | `page` | `pagePath` |
 | `entry_page` | `landingPage` |
@@ -114,11 +114,11 @@ read GA4's quota or sampling metadata: `Report::$note` is always `null`.
 
 require __DIR__.'/vendor/autoload.php';
 
-use Omnireach\Ga4\Ga4Factory;
-use Omnireach\Model\Dimension;
-use Omnireach\Model\Metric;
-use Omnireach\Model\ReachQuery;
-use Omnireach\Registry;
+use Omnipulse\Ga4\Ga4Factory;
+use Omnipulse\Model\Dimension;
+use Omnipulse\Model\Metric;
+use Omnipulse\Model\ReachQuery;
+use Omnipulse\Registry;
 use Symfony\Component\HttpClient\HttpClient;
 
 $registry = new Registry([new Ga4Factory(HttpClient::create())], [
@@ -144,11 +144,11 @@ In Symfony:
 
 ```yaml
 services:
-    Omnireach\Ga4\Ga4Factory:
+    Omnipulse\Ga4\Ga4Factory:
         arguments: ['@http_client']
-    Omnireach\Registry:
+    Omnipulse\Registry:
         arguments:
-            $factories: ['@Omnireach\Ga4\Ga4Factory']
+            $factories: ['@Omnipulse\Ga4\Ga4Factory']
             $config:
                 ga: { factory: ga4, options: { property: '%env(GA4_PROPERTY)%', credentials: '%env(GA4_SERVICE_ACCOUNT)%' } }
 ```
