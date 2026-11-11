@@ -7,6 +7,7 @@ use Omnipulse\Exception\InvalidConfigException;
 use Omnipulse\Http\JsonApi;
 use Omnipulse\ProviderFactory;
 use Omnipulse\ProviderInterface;
+use Omnisense\Contracts\Policy\UsagePolicy;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
@@ -45,7 +46,7 @@ final class Ga4Factory extends ProviderFactory
 
         return new Ga4Provider(
             new JsonApi($http, 'Google Analytics', $c->backoff()),
-            new GoogleToken(new JsonApi($http, 'Google OAuth'), self::SCOPE, null !== $credentials ? GoogleToken::credentials($credentials) : null, $c->string('access_token')),
+            new GoogleToken(new JsonApi($http, 'Google OAuth'), self::SCOPE, null !== $credentials ? GoogleToken::credentials($credentials) : null, $c->string('access_token'), guard: $c->guard(UsagePolicy::fromFile(Ga4Provider::POLICY))),
             (string) $c->string('property'),
             rtrim($c->string('url') ?? 'https://analyticsdata.googleapis.com/v1beta', '/'),
         );

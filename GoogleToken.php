@@ -5,12 +5,15 @@ namespace Omnipulse\Ga4;
 use Omnipulse\Exception\InvalidConfigException;
 use Omnipulse\Exception\ProviderException;
 use Omnipulse\Http\JsonApi;
+use Omnisense\Contracts\Policy\PolicyGuard;
 
 /**
  * A bearer token for a Google API: the one given, or one obtained for a
  * service account - a JWT signed with its private key (RS256) exchanged at
  * its token_uri (the OAuth 2.0 JWT bearer grant, RFC 7523) - and kept until
- * a minute before it expires.
+ * a minute before it expires. Given the provider's guard (Config::guard()),
+ * each token request is counted under the operation "token", the provider's
+ * waits honoured before it is sent.
  *
  * The same class lives in omnipulse/search-console and omnipulse/ga4: two
  * providers, one grant, no shared package for forty lines.
@@ -22,6 +25,7 @@ final class GoogleToken
     /**
      * @param array<string, mixed>|null $serviceAccount the service account's JSON key, decoded (client_email, private_key, token_uri)
      * @param ?\Closure(): int          $clock          the present as a UNIX time (a test's); time() when null
+     * @param ?PolicyGuard              $guard          the provider's guard for the requests the registry's does not see; null: not counted
      */
     public function __construct(
         private readonly JsonApi $api,
@@ -29,6 +33,7 @@ final class GoogleToken
         #[\SensitiveParameter] private readonly ?array $serviceAccount = null,
         #[\SensitiveParameter] private ?string $token = null,
         private readonly ?\Closure $clock = null,
+        private readonly ?PolicyGuard $guard = null,
     ) {
         if (null === $serviceAccount && null === $token) {
             throw new InvalidConfigException('A Google API needs a service account\'s key or an access token.');
@@ -59,7 +64,8 @@ final class GoogleToken
     {
         $now = $this->now();
         if (null === $this->token || $now >= $this->expires) {
-            $answer = $this->api->request('POST', $this->tokenUri(), ['body' => ['grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', 'assertion' => $this->assertion($now)]], 'an access token');
+            $ask = fn () => $this->api->request('POST', $this->tokenUri(), ['body' => ['grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer', 'assertion' => $this->assertion($now)]], 'an access token');
+            $answer = null === $this->guard ? $ask() : $this->guard->call('token', $ask);
             $this->token = $answer->string('access_token') ?? throw new ProviderException('Google gave no access token.');
             $this->expires = $now + max(60, ($answer->int('expires_in') ?? 3600) - 60);
         }

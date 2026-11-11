@@ -14,6 +14,10 @@ use Omnipulse\Model\ReachQuery;
 use Omnipulse\Model\Row;
 use Omnipulse\Registry;
 use Omnipulse\Testing\RecordedHttpClient;
+use Omnipulse\Exception\UsageLimitReachedException;
+use Omnisense\Contracts\Policy\PolicyGuard;
+use Omnisense\Contracts\Policy\RateLimit;
+use Omnisense\Contracts\Policy\UsagePolicy;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -92,4 +96,23 @@ final class Ga4ProviderTest extends TestCase
             'POST /properties/123456789:runReport' => (string) file_get_contents(__DIR__.'/Fixtures/landing-pages.json'),
         ]);
     }
+
+    public function testTheTokenRequestIsCountedUnderTokenAndNeverSentOverALimit(): void
+    {
+        $pair = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => \OPENSSL_KEYTYPE_RSA]);
+        self::assertNotFalse($pair);
+        openssl_pkey_export($pair, $pem);
+        $http = RecordedHttpClient::routes([]);
+        $guard = new PolicyGuard(UsagePolicy::builder('ga4')->limit(RateLimit::perDay(0, 'token'))->build(), exception: UsageLimitReachedException::class);
+        $token = new GoogleToken(new JsonApi($http, 'Google OAuth'), Ga4Factory::SCOPE, ['client_email' => 'reports@example.iam.gserviceaccount.com', 'private_key' => \is_string($pem) ? $pem : ''], guard: $guard);
+
+        try {
+            $token->get();
+            self::fail('The token request went out over the limit.');
+        } catch (UsageLimitReachedException $e) {
+            self::assertSame('0/day/application/token', $e->limit?->id());
+        }
+        self::assertSame([], $http->requests, 'nothing was sent');
+    }
+
 }
