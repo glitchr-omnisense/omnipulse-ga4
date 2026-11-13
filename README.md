@@ -7,6 +7,38 @@ this package replaces the former name).
 any PHP host: visitors, sessions, pageviews, bounce rate and session length of a property, by
 landing page, page, source, country, device or day, combined as needed.
 
+## Install and a first call
+
+```sh
+composer require omnipulse/ga4
+```
+
+No account for this first call: the Analytics Data API's answer is recorded
+(`Omnipulse\Testing\RecordedHttpClient` answers in place of the API), so nothing leaves the process.
+A real call needs a Google Cloud service account given the Viewer role on the GA4 property (its JSON
+key as `credentials`), or an access token obtained elsewhere.
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omnipulse\Ga4\Ga4Factory;
+use Omnipulse\Model\{Dimension, Metric, ReachQuery};
+use Omnipulse\Testing\RecordedHttpClient;
+
+// the Analytics Data API's answer, recorded: nothing sent. HttpClient::create() (symfony/http-client) for a real call.
+$http = RecordedHttpClient::routes([
+    'POST /properties/123456789:runReport' => '{"dimensionHeaders": [{"name": "landingPage"}], "metricHeaders": [{"name": "totalUsers", "type": "TYPE_INTEGER"}, {"name": "sessions", "type": "TYPE_INTEGER"}], "rows": [{"dimensionValues": [{"value": "/"}], "metricValues": [{"value": "1840"}, {"value": "2210"}]}]}',
+]);
+$ga4 = (new Ga4Factory($http))->create(['property' => '123456789', 'access_token' => 'recorded']);
+
+$report = $ga4->audience(new ReachQuery(new DateTimeImmutable('2026-10-01'), new DateTimeImmutable('2026-10-31'), [Dimension::EntryPage], [Metric::Visitors, Metric::Visits]));
+echo json_encode($report->rows[0]->dimensions + $report->rows[0]->metrics, JSON_UNESCAPED_SLASHES), "\n";   // {"entry_page":"/","visitors":1840,"visits":2210}
+```
+
+With your credentials, through the family's registry:
+
 ```php
 use Omnipulse\Ga4\Ga4Factory;
 use Omnipulse\Registry;
